@@ -5,26 +5,51 @@ const bcrypt = require("bcrypt")
 
 // Schema for User
 const userSchema = new mongoose.Schema({
-    username: {
-        type: String,
-        required: true,
-        minLength: 4,
-    },
-    phone: {
-        type: String,
-        required: true,
-        minLength: 10,
-    },
-    email: {
+    // firstName: {
+    //     type: String,
+    //     required: true,
+    //     minLength: 4,
+    // },
+    // lastName: {
+    //     type: String,
+    // },
+    emailId: {
         type: String,
         required: true,
         unique: true,
         trim: true,
     },
+    firstName: {
+        type: String,
+    },
     password: {
         type: String,
         required: true,
-    }
+    },
+    age: {
+        type: Number,
+    },
+    gender: {
+        type: String,
+        enum: {
+            values: ["male", "female", "others"],
+            message: `{VALUE} is not a valid gender type`
+        },
+        // validate(value) {
+        //     if(!["male", "female", "others"].includes(value)) {
+        //         throw new Error("Gender data is not valid")
+        //     }
+        // },
+    },
+    photoURL: {
+        type: String,
+        default: "https://www.pngkey.com/png/detail/230-2301779_best-classified-apps-default-user-profile.png",
+    },
+    about: {
+        type: String,
+        default: "This is default about description of user",
+    },
+    skills: [String],
 })
 
 

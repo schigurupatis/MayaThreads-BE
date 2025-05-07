@@ -11,12 +11,10 @@ const authRouter = express.Router();
 // Creating a new instance of the User Model - POST
 authRouter.post("/signup", async (req, res) => {
     try {
-        //console.log("Received signup data:", req.body);
-
         // 1. Validation of data 
         validateSignupData(req);
 
-        const { username, phone, email, password } = req.body;
+        const { username, emailId, phone, password } = req.body;
 
         // 2. Encrypt the Password
         const passwordHash = bcrypt.hashSync(password, 10);
@@ -25,7 +23,7 @@ authRouter.post("/signup", async (req, res) => {
         // 3. Store the user instance in DB
         //const user = new User(req.body)
         const user = new User({
-            username, phone, email, password: passwordHash,
+            username, emailId, phone, password: passwordHash,
         })
         await user.save();  
         res.send("User Added Successfully")

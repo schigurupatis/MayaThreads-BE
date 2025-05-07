@@ -3,15 +3,12 @@ const validator = require("validator");
 
 const validateSignupData = (req) => {
 
-    const {username, phone, email, password} = req.body;
+    const {username, emailId, phone, password} = req.body;
 
-    if(!username) {
-        throw new Error("Name is not valid!");
-    }
-    else if(!phone) {
-        throw new Error("Phone is not valid!");
-    }
-    else if(!validator.isEmail(email)) {
+    // if(!firstName || !lastName) {
+    //     throw new Error("Name is not valid!");
+    // }
+    if(!validator.isEmail(emailId)) {
         throw new Error("Email is not valid!");
     }
     else if(!validator.isStrongPassword(password)) {
@@ -22,7 +19,7 @@ const validateSignupData = (req) => {
 
 const validateProfileEditData = (req) => {
 
-    const allowedEditFields = ["username", "phone", "email"];
+    const allowedEditFields = ["firstName", "lastName", "emailId", "photoURL", "gender", "age", "about", "skills"];
 
     const isEditAllowed = Object.keys(req.body).every(field => allowedEditFields.includes(field));
 
