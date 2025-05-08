@@ -7,6 +7,8 @@ const jwt = require("jsonwebtoken")
 const cors = require("cors")
 
 require("dotenv").config();
+console.log("Loaded DB URI:", process.env.DB_CONNECTION_SECRET);
+
 
 app.use(cors({
     origin: "http://localhost:3000",
