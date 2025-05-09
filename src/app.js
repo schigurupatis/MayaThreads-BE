@@ -5,6 +5,7 @@ const User = require("./models/user");
 const cookieParser = require("cookie-parser")
 const jwt = require("jsonwebtoken")
 const cors = require("cors")
+const http = require("http")
 
 require("dotenv").config();
 console.log("Loaded DB URI:", process.env.DB_CONNECTION_SECRET);
