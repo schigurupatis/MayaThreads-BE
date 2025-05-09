@@ -11,10 +11,14 @@ require("dotenv").config();
 console.log("Loaded DB URI:", process.env.DB_CONNECTION_SECRET);
 
 
+// app.use(cors({
+//     origin: "http://localhost:3000",
+//     credentials: true,
+// }))
 app.use(cors({
-    origin: "http://localhost:3000",
+    origin: ["http://localhost:3000", "https://mayathreads.com"],
     credentials: true,
-}))
+}));
 app.use(express.json());
 app.use(cookieParser())
 
