@@ -39,39 +39,84 @@ authRouter.post("/signup", async (req, res) => {
 
 
 // Login API 
+// authRouter.post("/login", async (req, res) => {
+//     try{
+//         const {emailId, password} = req.body;
+
+//         const user = await User.findOne({ emailId});
+//         if(!user) {
+//             throw new Error("Invalid Credentials")
+//         }
+
+//         const isPasswordValid = await user.validatePassword
+
+//         if(isPasswordValid) {
+//             // Create a JWT Token
+//             const token = await user.getJWT();
+//             //console.log("Generated Token:", token);
+
+//             // Add the token to cookie and send the response back to the user
+//             // Add the token to cookie
+//             res.cookie("token", token, {
+//                 httpOnly: true, // Ensures cookie is not accessible via JavaScript
+//                 secure: false, // Set to true if using HTTPS
+//                 maxAge: 3600000, // Cookie expires in 1 hour (same as token)
+//             });
+
+//             res.send(user)
+//         } else {
+//             throw new Error("Invalid Credentials")
+//         }
+
+//     } catch (err) {
+//         res.status(400).send("ERR: : " + err);
+//     }
+// })
+
+
 authRouter.post("/login", async (req, res) => {
-    try{
-        const {emailId, password} = req.body;
+  try {
+    const { emailOrPhone, password } = req.body;
 
-        const user = await User.findOne({ emailId});
-        if(!user) {
-            throw new Error("Invalid Credentials")
-        }
+    // Find user by email or phone
+    const user = await User.findOne({
+      $or: [{ email: emailOrPhone }, { phone: emailOrPhone }]
+    });
 
-        const isPasswordValid = await user.validatePassword
-
-        if(isPasswordValid) {
-            // Create a JWT Token
-            const token = await user.getJWT();
-            //console.log("Generated Token:", token);
-
-            // Add the token to cookie and send the response back to the user
-            // Add the token to cookie
-            res.cookie("token", token, {
-                httpOnly: true, // Ensures cookie is not accessible via JavaScript
-                secure: false, // Set to true if using HTTPS
-                maxAge: 3600000, // Cookie expires in 1 hour (same as token)
-            });
-
-            res.send(user)
-        } else {
-            throw new Error("Invalid Credentials")
-        }
-
-    } catch (err) {
-        res.status(400).send("ERR: : " + err);
+    if (!user) {
+      return res.status(400).json("User not registered. Please sign up first.");
     }
-})
+
+    // Compare password with bcrypt
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json("Incorrect password.");
+    }
+
+    // Create JWT token if needed
+    const token = await user.getJWT?.(); // If you're using a JWT function
+
+    // Send back user info and token if needed
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: false, // Set true in production with HTTPS
+      maxAge: 3600000,
+    });
+
+    // Return the user object (you can select which fields to return)
+    res.status(200).json({
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      phone: user.phone,
+    });
+
+  } catch (err) {
+    console.error("Login Error:", err);
+    res.status(500).json("Server error. Please try again later.");
+  }
+});
+
 
 
 // LogOut API
