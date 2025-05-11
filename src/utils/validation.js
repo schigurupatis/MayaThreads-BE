@@ -30,7 +30,30 @@ const validateProfileEditData = (req) => {
 
 }
 
+
+const validateBookNow = (req) => {
+
+    const {fullname, phone, email, subject, message} = req.body;
+
+    if(!fullname) {
+        throw new Error("Full Name is not valid!");
+    }
+    else if(!phone) {
+        throw new Error("Phone is not valid!");
+    }
+    else if(!validator.isEmail(email)) {
+        throw new Error("Email is not valid!");
+    }
+    else if(!subject) {
+        throw new Error("Subject is not valid!");
+    }
+    else if(!message) {
+        throw new Error("Message is not valid!");
+    }
+}
+
 module.exports = {
     validateSignupData,
     validateProfileEditData,
+    validateBookNow,
 }
