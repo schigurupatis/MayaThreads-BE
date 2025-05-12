@@ -22,7 +22,15 @@ authRouter.post("/signup", async (req, res) => {
         const passwordHash = bcrypt.hashSync(password, 10);
         //console.log(passwordHash)
 
-        // 3. Store the user instance in DB
+        // 3. Check if user already exists
+        const existingUser = await User.findOne({
+          $or: [{ email }, { phone }]
+        });
+        if (existingUser) {
+          return res.status(400).json("You have already registered with us. Please login.");
+        }
+
+        // 4. Store the user instance in DB
         //const user = new User(req.body)
         const user = new User({
             username, phone, email, password: passwordHash,
@@ -84,7 +92,7 @@ authRouter.post("/login", async (req, res) => {
     });
 
     if (!user) {
-      return res.status(400).json("User not registered. Please sign up first.");
+      return res.status(400).json("User not registered withus. Please sign up.");
     }
 
     // Compare password with bcrypt

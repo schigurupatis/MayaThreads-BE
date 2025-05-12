@@ -30,7 +30,7 @@ bookNowRouter.post('/booknow', logRequest, validateRequest, async (req, res) => 
 });
 
 //  Optional:  Get all requests (for admin)
-bookNowRouter.get('/', async (req, res) => {
+bookNowRouter.get('/', async (req, res, next) => {
     try {
         const requests = await BookNowRequestModel.find();
         res.json(requests);
@@ -40,7 +40,7 @@ bookNowRouter.get('/', async (req, res) => {
 });
 
 // Optional: Get single request
-bookNowRouter.get('/:id', async (req, res) => {
+bookNowRouter.get('/:id', async (req, res, next) => {
   try {
       const request = await BookNowRequestModel.findById(req.params.id);
       if (!request) {
@@ -53,7 +53,7 @@ bookNowRouter.get('/:id', async (req, res) => {
 });
 
 //  Optional: Update Request Status (for admin)
-bookNowRouter.patch('/:id', async (req, res) => {
+bookNowRouter.patch('/:id', async (req, res, next) => {
     try {
         const updatedRequest = await BookNowRequestModel.findByIdAndUpdate(
             req.params.id,
